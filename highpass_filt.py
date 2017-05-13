@@ -46,16 +46,16 @@ filtered_x = lfilter(taps, 1.0, x)
 # Plot the FIR filter coefficients.
 #------------------------------------------------
 
-figure(1)
-plot(taps, 'bo-', linewidth=2)
-title('Filter Coefficients (%d taps)' % N)
-grid(True)
+# figure(1)
+# plot(taps, 'bo-', linewidth=2)
+# title('Filter Coefficients (%d taps)' % N)
+# grid(True)
 
 #------------------------------------------------
 # Plot the magnitude response of the filter.
 #------------------------------------------------
 
-figure(2)
+figure()
 clf()
 w, h = freqz(taps, worN=8000)
 plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
@@ -66,38 +66,38 @@ ylim(-0.05, 1.05)
 grid(True)
 
 # Upper inset plot.
-ax1 = axes([0.42, 0.6, .45, .22])
+ax1 = axes([0.22, 0.55, .35, .25])
 title("Passband Ripple")
 plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
-xlim(700,1000)
-ylim(0.9985, 1.0025)
+xlim(8950,9200)
+ylim(0.995, 1.0025)
 grid(True)
 
 # Lower inset plot
-ax2 = axes([0.42, 0.25, .45, .25])
+ax2 = axes([0.22, 0.2, .35, .25])
 title("Stopband Ripple")
 plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
-xlim(1200.0, 1600.0)
-ylim(0.0, 0.0011)
+xlim(8600.0, 8900.0)
+ylim(0.0, 0.011)
 grid(True)
-
-#------------------------------------------------
-# Plot the original and filtered signals.
-#------------------------------------------------
-
-# The phase delay of the filtered signal.
-delay = 0.5 * (N-1) / sample_rate
-
-figure(3)
-# Plot the original signal.
-plot(t, x)
-# Plot the filtered signal, shifted to compensate for the phase delay.
-plot(t-delay, filtered_x, 'r-')
-# Plot just the "good" part of the filtered signal.  The first N-1
-# samples are "corrupted" by the initial conditions.
-plot(t[N-1:]-delay, filtered_x[N-1:], 'g', linewidth=4)
-
-xlabel('t')
-grid(True)
+#
+# #------------------------------------------------
+# # Plot the original and filtered signals.
+# #------------------------------------------------
+#
+# # The phase delay of the filtered signal.
+# delay = 0.5 * (N-1) / sample_rate
+#
+# figure(3)
+# # Plot the original signal.
+# plot(t, x)
+# # Plot the filtered signal, shifted to compensate for the phase delay.
+# plot(t-delay, filtered_x, 'r-')
+# # Plot just the "good" part of the filtered signal.  The first N-1
+# # samples are "corrupted" by the initial conditions.
+# plot(t[N-1:]-delay, filtered_x[N-1:], 'g', linewidth=4)
+#
+# xlabel('t')
+# grid(True)
 
 show()

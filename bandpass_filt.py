@@ -34,13 +34,13 @@ ripple_db = 60.0
 N, beta = kaiserord(ripple_db, width)
 
 # The cutoff frequency of the filter.
-cutoff_hz = 8875.0
+center = 5000.0
 
 bpCut1 = 3875/nyq_rate
 bpCut2 = 6125/nyq_rate
 
 # Use firwin with a Kaiser window to create a lowpass FIR filter.
-taps = firwin(N, [bpCut1, bpCut2], window=('kaiser', beta),pass_zero=False)
+taps = firwin(N, [bpCut1, bpCut2], width=width, window=('kaiser', beta),pass_zero=False)
 
 # Use lfilter to filter x with the FIR filter.
 filtered_x = lfilter(taps, 1.0, x)

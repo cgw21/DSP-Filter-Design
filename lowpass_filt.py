@@ -28,7 +28,7 @@ nyq_rate = sample_rate / 2.0
 width = 250.0/nyq_rate
 
 # The desired attenuation in the stop band, in dB.
-ripple_db = 60.0
+ripple_db = 55.0
 
 # Compute the order and Kaiser parameter for the FIR filter.
 N, beta = kaiserord(ripple_db, width)

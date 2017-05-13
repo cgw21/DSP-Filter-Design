@@ -27,24 +27,22 @@ def sampler(audiofile):
     print(numChan, " # channels")
     print(noiseWav.dtype, "type")
     print("wav shape", noiseWav.shape)
-    s1 = (noiseWav / 2. ** 15)
+    snd = (noiseWav / 2. ** 15) # normalized Audio
 
-    return s1, numSamples, sampleRate, numChan, f.getnframes()
+    return snd, numSamples, sampleRate, numChan, f.getnframes()
 
-
+#if __name__ == '__main__':
 # assign file to work on
 # audiofile = 'Project_2017/Noisy_file_1.wav'
 audiofile = 'Project_2017/spectogram_test.wav'
 # audiofile = 'Project_2017/project.wav'
 snd, numSamp, sampRate, numChan, nframe = sampler(audiofile)
-N = (nframe / 2)
 s1 = None
 s2 = None
 if numChan == 2:
     s1 = snd[:, 0]
     s2 = snd[:, 1]
-
-print(s1, numSamp, sampRate, numChan, N, " number of positive samples")
+    print(s1, numSamp, sampRate, numChan, N, " number of positive samples")
 
 # create time array for time plot
 timearray = arange(0, numSamp, 1)
@@ -55,6 +53,7 @@ figure(1)
 # plot time vs amplitude(normalized to -1 to 1
 title("channel 1")
 plot(timearray, s1, color='k')
+
 ylabel('Amplitude')
 xlabel('Time (ms)')
 
@@ -93,7 +92,9 @@ plot(freqArray / 1000, 10 * log10(p), color='g')
 xlabel('Frequency (kHz)')
 ylabel('Power (dB)')
 
-figure(3)
+import lowpass_filt
+
+sigs.
 
 
 show()
