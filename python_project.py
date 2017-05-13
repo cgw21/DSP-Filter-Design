@@ -2,7 +2,7 @@ import contextlib
 import wave
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import spectrogram, lfilter, firwin, kaiserord, freqz
+from scipy.signal import spectrogram, lfilter, firwin, kaiserord, freqz, get_window
 import scipy
 import numpy as np
 
@@ -46,7 +46,7 @@ def sampler(audiofile):
 def graph_spectrogram(data, rate, title):
     # rate, data = get_wav_info(wav_file)
     nfft = 4096  # Length of the windowing segments
-    fs = 44100  # Sampling frequency
+    fs = SAMPRATE  # Sampling frequency
     plt.figure()
     pxx, freqs, bins, im = plt.specgram(data, nfft, rate)
     plt.ylabel('Freq')
@@ -58,17 +58,17 @@ def graph_spectrogram(data, rate, title):
                 bbox_inches='tight',
                 pad_inches=0)  # Spectrogram saved as a .png
 
-    plt.figure()
-    f, t, sxx = spectrogram(data, rate)
-    plt.pcolormesh(t, f, sxx)
-    plt.ylabel('Freq')
-    plt.xlabel('Time')
-    plt.savefig(title + '_pmesh.png',
-                dpi=600,  # Dots per inch
-                frameon='false',
-                aspect='normal',
-                bbox_inches='tight',
-                pad_inches=0)  # Spectrogram saved as a .png
+    # plt.figure()
+    # f, t, sxx = spectrogram(data, rate)
+    # plt.pcolormesh(t, f, sxx)
+    # plt.ylabel('Freq')
+    # plt.xlabel('Time')
+    # plt.savefig(title + '_pmesh.png',
+    #             dpi=600,  # Dots per inch
+    #             frameon='false',
+    #             aspect='normal',
+    #             bbox_inches='tight',
+    #             pad_inches=0)  # Spectrogram saved as a .png
     return
 
 
@@ -147,6 +147,12 @@ def LOWPASS(x):
 
     # Compute the order and Kaiser parameter for the FIR filter.
     N, beta = kaiserord(ripple_db, width)
+    print("order of the window: ", N)
+    print("Beta Value", beta)
+    win = get_window(('kaiser',beta),N)
+    lpf_data.write("KAISER WIN: \n")
+    lpf_data.write(np.array2string(win))
+    lpf_data.write("\n\n\n")
 
     # The cutoff frequency of the filter.
     cutoff_hz = 1125.0
@@ -174,6 +180,7 @@ def LOWPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     lpf_data.write("Coeffs: \n")
     lpf_data.write(np.array2string(taps, 5, 5, True, ','))
     lpf_data.write("\n\n")
@@ -214,6 +221,7 @@ def LOWPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     lpf_data.write("normalized freq: \n")
     lpf_data.write(np.array2string(w, precision=5, suppress_small=True, separator=','))
     lpf_data.write("\n\n")
@@ -252,6 +260,7 @@ def LOWPASS(x):
 
     graph_spectrogram(filtered_x, sampRate, 'lpf')
     lpf_data.close()
+    plt.close()
     return
 
 
@@ -268,6 +277,7 @@ def BANDPASS(x):
 
     # Compute the order and Kaiser parameter for the FIR filter.
     N, beta = kaiserord(ripple_db, width)
+
 
     # The cutoff frequency of the filter.
     bpCut1 = 3875 / nyq_rate
@@ -296,6 +306,7 @@ def BANDPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     bpf_data.write("Coeffs: \n")
     bpf_data.write(np.array2string(taps, 5, 5, True, ','))
     bpf_data.write("\n\n")
@@ -336,6 +347,7 @@ def BANDPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     bpf_data.write("normalized freq: \n")
     bpf_data.write(np.array2string(w, precision=5, suppress_small=True, separator=','))
     bpf_data.write("\n\n")
@@ -372,7 +384,7 @@ def BANDPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
-
+    plt.close()
     graph_spectrogram(filtered_x, sampRate, 'bpf')
     bpf_data.close()
     return
@@ -419,6 +431,7 @@ def HIGHPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     hpf_data.write("Coeffs: \n")
     hpf_data.write(np.array2string(taps, 5, 5, True, ','))
     hpf_data.write("\n\n")
@@ -458,6 +471,7 @@ def HIGHPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
+    plt.close()
     hpf_data.write("normalized freq: \n")
     hpf_data.write(np.array2string(w, precision=5, suppress_small=True, separator=','))
     hpf_data.write("\n\n")
@@ -494,7 +508,7 @@ def HIGHPASS(x):
                 aspect='normal',
                 bbox_inches='tight',
                 pad_inches=0)
-
+    plt.close()
     graph_spectrogram(filtered_x, sampRate, 'hpf')
     hpf_data.close()
     return
